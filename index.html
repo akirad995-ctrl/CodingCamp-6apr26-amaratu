@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualisasi Pengeluaran</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero-card">
+      <p class="eyebrow">Visualisasi Pengeluaran & Anggaran</p>
+      <h1>Kontrol pengeluaran harian dalam satu dashboard.</h1>
+      <div class="balance-panel">
+        <span class="balance-label">Total Saldo Terpakai</span>
+        <strong id="totalSaldo">Rp0</strong>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="card">
+        <div class="section-heading">
+          <p>Input Transaksi</p>
+          <h2>Tambah pengeluaran baru</h2>
+        </div>
+
+        <form id="transactionForm" class="transaction-form">
+          <label>
+            <span>Nama Item</span>
+            <input type="text" id="namaItem" name="namaItem" placeholder="Contoh: Chessecake">
+          </label>
+
+          <label>
+            <span>Jumlah</span>
+            <input type="number" id="jumlah" name="jumlah" min="1" placeholder="Contoh: 25000">
+          </label>
+
+          <label>
+            <span>Kategori</span>
+            <select id="kategori" name="kategori">
+              <option value="">Pilih kategori</option>
+              <option value="Makanan">Makanan</option>
+              <option value="Transportasi">Transportasi</option>
+              <option value="Hiburan">Hiburan</option>
+            </select>
+          </label>
+
+          <button type="submit">Tambah Transaksi</button>
+          <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="section-heading">
+          <p>Grafik Visual</p>
+          <h2>Distribusi pengeluaran</h2>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="expenseChart"></canvas>
+        </div>
+      </div>
+      
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <p>Riwayat Transaksi</p>
+        <h2>Daftar pengeluaran</h2>
+      </div>
+
+      <div class="transaction-list-wrap">
+        <ul id="transactionList" class="transaction-list"></ul>
+      </div>
+    </section>
+  </main>
+  <div id="cat-container"></div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
