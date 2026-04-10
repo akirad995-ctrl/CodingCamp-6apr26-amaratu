@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Focus Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="topbar">
+    <select id="language" onchange="changeLanguage()">
+      <option value="en">🇬🇧 English</option>
+      <option value="id">🇮🇩 Indonesia</option>
+      <option value="jp">🇯🇵 Jepang</option>
+      <option value="th">🇹🇭 Thailand</option>
+    </select>
+    <button id="themeBtn" onclick="toggleDarkMode()">🌙 Dark Mode</button>
+    <button onclick="openBgModal()">🖼️ Background</button>
+  </div>
+
+  <!-- Background Modal -->
+  <div id="bgModal" class="modal hidden">
+    <div class="modal-box bg-modal-box">
+      <h3>🖼️ Choose Background</h3>
+      <div class="bg-mode-toggle">
+        <button class="bg-mode-btn active" id="modeLight" onclick="switchBgMode('light', this)">☀️ Light Mode</button>
+        <button class="bg-mode-btn" id="modeDark" onclick="switchBgMode('dark', this)">🌙 Dark Mode</button>
+      </div>
+      <div class="bg-tabs">
+        <button class="bg-tab active" onclick="switchBgTab('scenery', this)">🏞️ Scenery</button>
+        <button class="bg-tab" onclick="switchBgTab('food', this)">🍜 Food</button>
+        <button class="bg-tab" onclick="switchBgTab('anime', this)">☕ Drinks</button>
+        <button class="bg-tab" onclick="switchBgTab('flowers', this)">🌸 Flowers</button>
+        <button class="bg-tab" onclick="switchBgTab('upload', this)">📁 Upload</button>
+      </div>
+      <div id="bgGrid" class="bg-grid"></div>
+      <div id="bgUpload" class="hidden" style="text-align:center;padding:16px 0;">
+        <input type="file" id="bgFileInput" accept="image/*" style="display:none" onchange="handleBgUpload(event)" />
+        <button class="btn-primary" onclick="document.getElementById('bgFileInput').click()">Choose from Gallery</button>
+        <p style="margin-top:10px;font-size:0.8rem;opacity:0.7;">Supports JPG, PNG, WEBP</p>
+      </div>
+      <div class="modal-actions" style="justify-content:space-between">
+        <button class="btn-sec" onclick="resetBg()">↩️ Reset to Default</button>
+        <button class="btn-sec" onclick="closeBgModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1 id="greeting">Good Morning</h1>
+    <p id="datetime"></p>
+    <canvas id="analogClock" width="140" height="140"></canvas>
+    <div class="name-row">
+      <span id="displayName"></span>
+      <button class="btn-link" onclick="openNameModal()">✏️</button>
+    </div>
+    <p id="dailyQuote" class="daily-quote"></p>
+  </div>
+
+  <!-- Name Modal -->
+  <div id="nameModal" class="modal hidden">
+    <div class="modal-box">
+      <h3 id="modalTitle">What's your name?</h3>
+      <input id="nameInput" type="text" maxlength="30" placeholder="Your name..." />
+      <div class="modal-actions">
+        <button class="btn-primary" onclick="saveName()">Save</button>
+        <button class="btn-sec" onclick="closeNameModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Timer -->
+    <div class="card">
+      <h2 id="timerTitle">🎯 Focus Timer</h2>
+      <div class="timer-display" id="timerDisplay">25:00</div>
+      <div class="timer-setting">
+        <label id="minutesLabel">Minutes:
+          <input type="number" id="timerMinutes" min="1" max="99" value="25" />
+        </label>
+      </div>
+      <div class="timer-btns">
+        <button class="btn-primary" id="startBtn" onclick="startTimer()">Start</button>
+        <button class="btn-sec" onclick="stopTimer()">Stop</button>
+        <button class="btn-sec" onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+
+    <!-- To-Do -->
+    <div class="card">
+      <h2 id="todoTitle">📝 To-Do List</h2>
+      <div class="input-row">
+        <input id="taskInput" type="text" maxlength="100" placeholder="Add a task..." />
+        <button class="btn-primary" onclick="addTask()" id="addTaskBtn">Add</button>
+      </div>
+      <div class="sort-row">
+        <button class="btn-sort active" id="sortNone" onclick="sortTasks('none')">Default</button>
+        <button class="btn-sort" id="sortAZ" onclick="sortTasks('az')">A→Z</button>
+        <button class="btn-sort" id="sortUndone" onclick="sortTasks('undone')">Undone first</button>
+        <button class="btn-sort" id="sortDone" onclick="sortTasks('done')">Done first</button>
+      </div>
+      <ul id="taskList"></ul>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="card">
+      <h2 id="linksTitle">🔗 Quick Links</h2>
+      <div class="input-row">
+        <input id="linkName" type="text" maxlength="30" placeholder="Label" />
+        <input id="linkURL" type="url" maxlength="200" placeholder="https://..." />
+        <button class="btn-primary" onclick="addLink()" id="addLinkBtn">Add</button>
+      </div>
+      <div id="linkList"></div>
+    </div>
+
+    <!-- Weather -->
+    <div class="card weather-card">
+      <h2 id="weatherTitle">🌤️ Weather</h2>
+      <div id="weatherContent" class="weather-content">
+        <div class="weather-loading" id="weatherLoading">📍 Detecting location...</div>
+        <div id="weatherData" class="hidden">
+          <div class="weather-main">
+            <span id="weatherIcon" class="weather-icon"></span>
+            <span id="weatherTemp" class="weather-temp"></span>
+          </div>
+          <div id="weatherDesc" class="weather-desc"></div>
+          <div class="weather-details">
+            <span id="weatherHumidity"></span>
+            <span id="weatherWind"></span>
+          </div>
+          <div id="weatherLocation" class="weather-location"></div>
+        </div>
+        <div id="weatherError" class="hidden weather-error">
+          ⚠️ <span id="weatherErrorMsg"></span>
+          <button class="btn-sec" onclick="loadWeather()" style="margin-top:8px;font-size:0.8rem;padding:5px 12px;">Retry</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="wave-container">
+    <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+      <path class="wave1" d="M0,40 C360,80 1080,0 1440,40 L1440,80 L0,80 Z"/>
+    </svg>
+  </div>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
